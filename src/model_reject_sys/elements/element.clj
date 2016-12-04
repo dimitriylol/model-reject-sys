@@ -1,4 +1,4 @@
-(ns model-reject-sys.element)
+(ns model-reject-sys.elements.element)
 
 (defrecord Element [])
 

@@ -1,5 +1,5 @@
-(ns model-reject-sys.processors
-  (:require [model-reject-sys.element :refer [->Element]]
+(ns model-reject-sys.elements.processors
+  (:require [model-reject-sys.elements.element :refer [->Element IElement]]
             [clojure.math.numeric-tower :refer [expt]]))
 
 (defprotocol LoadableElement
@@ -23,22 +23,22 @@
    :pr6 '()
    })
 
-(extend Processor 
+(extend-type Processor
   LoadableElement
-  {:delta-load (fn [processor] (- (:max processor) (:loaded processor)))
-   :redistributable-on? (fn [processor val]
-                          (if val (<= val (delta-load processor)) true))
-   :redistribute (fn [processor processors]
-                   (some (fn [redistributable-rule]
-                           (when (apply-redistributable-rule redistributable-rule
-                                                             processors)
-                             (map (fn [redistributable-val processor]
-                                    (incr-load processor redistributable-val))
-                                  redistributable-rule
-                                  processors)))
-                         ((:name processor) processors-redistribution-table)))
-   :incr-load (fn [processor val]
-                (if val (update processor :loaded #(+ val %)) processor))})
+  (delta-load [processor] (- (:max processor) (:loaded processor)))
+  (redistributable-on? [processor val]
+    (if val (<= val (delta-load processor)) true))
+  (redistribute [processor processors]
+    (some (fn [redistributable-rule]
+            (when (apply-redistributable-rule redistributable-rule
+                                              processors)
+              (map (fn [redistributable-val processor]
+                     (incr-load processor redistributable-val))
+                   redistributable-rule
+                   processors)))
+          ((:name processor) processors-redistribution-table)))
+  (incr-load [processor val]
+    (if val (update processor :loaded #(+ val %)) processor)))
 
 
 (defn ->Processor [name loaded max]

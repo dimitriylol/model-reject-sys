@@ -1,6 +1,6 @@
 (ns model-reject-sys.proc-test
   (:require  [clojure.test :refer :all]
-             [model-reject-sys.processors :refer :all]))
+             [model-reject-sys.elements.processors :refer :all]))
 
 (deftest redistributable-on?-test
   (let [test-proc (->Processor :test 40 100)]
