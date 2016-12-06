@@ -38,7 +38,7 @@
                    processors)))
           ((:name processor) processors-redistribution-table)))
   (incr-load [processor val]
-    (if val (update processor :loaded #(+ val %)) processor)))
+    (if val (update processor :loaded (partial + val)) processor)))
 
 
 (defn ->Processor [name loaded max]

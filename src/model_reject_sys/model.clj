@@ -9,7 +9,7 @@
 (defn task1 [state-vector]
   (let [interesting-elements '(:d1 :d2 :c1 :b1 :b2 :b3 :pr1 :pr2 :pr3 :a1 :a2 :m1)
         elems-state (merge (map (fn [elem-name]
-                                  ({elem-name (logical-state (elem-name state-vector))}))
+                                  ({elem-name (:logical-state (elem-name state-vector))}))
                                 interesting-elements))]
     (and (:d1 elems-state)
          (:d2 elems-state)
