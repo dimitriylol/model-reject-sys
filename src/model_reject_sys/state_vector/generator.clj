@@ -9,9 +9,9 @@
                (repeat (- n multiplicity) true))))
 
 (defn unique-rand-element [n result-set]
+  {:pre [(not-empty (difference (into #{} (take n (range))) result-set))]}
   "The same as rand-int, but check for uniqueness in result-set.
   Throw assertion if there isn't any random integer between 0 (inclusive) and n (exclusive)"
-  {:pre [(not-empty (difference (into #{} (take n (range))) result-set))]}
   (let [random (rand-int n)]
     (if (contains? result-set random)
       (unique-rand-element n result-set)

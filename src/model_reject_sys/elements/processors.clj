@@ -1,5 +1,5 @@
 (ns model-reject-sys.elements.processors
-  (:require [model-reject-sys.elements.element :refer [->Element IElement]]
+  (:require [model-reject-sys.elements.element :refer [->Element]]
             [clojure.math.numeric-tower :refer [expt]]))
 
 (defprotocol LoadableElement
