@@ -45,5 +45,26 @@
                                     (disable-all (->Processor :pr2-test 10 30)))
                               (list (->Adapter :a1-test)
                                     (disable-all (->Adapter :a2-test))))]
-      (is (= {:pr1-test false :pr2-test false :a1-test true :a2-test false}
-             (logical-state-apply grouped-elems))))))
+      (testing
+          (is (= {:pr1-test false :pr2-test false :a1-test true :a2-test false}
+                 (logical-state-apply grouped-elems)))))))
+
+(deftest fails-statistic-test
+  (let [model (->Model nil nil nil
+                       (list (->Processor :pr1-test 0 0) (->Processor :pr2-test 0 0))
+                       nil
+                       (list (->Adapter :a1-test)))]
+    (testing
+        (is (= {:pr1-test 0 :pr2-test 0 :a1-test 0} (fails-statistic model '(true true true))))
+      (is (= {:pr1-test 1 :pr2-test 0 :a1-test 1} (fails-statistic model '(false true false))))
+      (is (= {:pr1-test 0 :pr2-test 0 :a1-test 0} (fails-statistic model))))))
+
+(deftest probability-test
+  (let [model (->Model nil nil nil
+                       (list (assoc (->Processor :pr1-test 0 0) :rejection-prob 0.4)
+                             (assoc (->Processor :pr2-test 0 0) :rejection-prob 0.2))
+                       nil
+                       (list (assoc (->Adapter :a1-test) :rejection-prob 0.3)))]
+    (testing
+        (is (= (* 0.6 0.2 0.3) (probability model '(true false false))))
+      (is (= (* 0.6 0.8 0.7) (probability model '(true true true)))))))

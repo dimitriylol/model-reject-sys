@@ -16,16 +16,6 @@
   (probability [_ state-vector])
   (fails-statistic [_] [_ state-vector]))
 
-(defrecord Model [])
-
-(defn ->Model [bus controllers sensors processors magistrals adapters]
-  (Model. nil {:bus bus
-               :controllers controllers
-               :sensors sensors
-               :processors processors
-               :magistrals magistrals
-               :adapters adapters}))
-
 (defn split-by-size [lst lst-with-size]
   "split list on sub lists. Size of size sub-lists are set in lst-with-size"
   (if (and (not-empty lst) (not-empty lst-with-size))
@@ -62,14 +52,19 @@
          (mapcat (fn [{name :name log-st :logic-state}] (list name log-st))
                  (mapcat (partial redistribute-group 0) grouped-elems))))
 
-(extend-type Model
+
+(defrecord Model [bus controllers sensors processors magistrals adapters]
   IModel
   (groups [model] (vals model))
   (elements [model] (apply concat (vals model)))
   (apply-state-vector [model state-vector]
     (tasks (logical-state-apply (physical-state-apply state-vector model))))
   (probability [model state-vector]
-    (reduce (fn [res element] (* res (el-probability element))) 1 (elements model)))
+    (reduce (fn [res element] (* res (el-probability element)))
+            1
+            (map #(assoc %1 :phys-state %2)
+                 (elements model)
+                 state-vector)))
   (fails-statistic [model]
     (apply hash-map (mapcat #(list (:name %) 0) (elements model))))
   (fails-statistic [model state-vector]
