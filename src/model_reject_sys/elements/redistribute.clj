@@ -21,7 +21,7 @@
 
 (defmethod redistributable-on? :processor
   [processor val]
-  (if val (<= val (delta-load processor)) true))
+  (if val (and (:phys-state processor) (<= val (delta-load processor))) true))
 
 (defmethod redistributable-on? :default
   [element val]

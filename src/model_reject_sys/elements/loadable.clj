@@ -9,6 +9,8 @@
 (defmethod delta-load :default [element] 0)
 
 (defmethod incr-load :processor [processor val]
-  (if val (update processor :loaded (partial + val)) processor))
+  (if val
+    (update processor :loaded (partial + val))
+    (assoc processor :logic-state true)))
 
 (defmethod incr-load :default [element val] element)

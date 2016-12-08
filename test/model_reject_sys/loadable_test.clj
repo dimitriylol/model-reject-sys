@@ -6,5 +6,5 @@
 (deftest incr-load-test
   (let [proc (->Processor :test 10 100)]
     (testing
-        (is (= (incr-load proc nil) proc))
+        (is (= (incr-load (assoc proc :logic-state false) nil) proc))
       (is (= (incr-load proc 20) (->Processor :test 30 100))))))

@@ -7,6 +7,7 @@
   (let [test-proc (->Processor :test 40 100)]
     (testing
         (is (= (redistributable-on? test-proc 60) true))
+      (is (= (redistributable-on? (assoc test-proc :phys-state false) 0)))
       (is (= (redistributable-on? test-proc 100) false))
       (is (= (redistributable-on? test-proc nil) true)))))
 
@@ -23,7 +24,7 @@
 
 (deftest redistribute-test
   (with-redefs [processors-redistribution-table {:test1 '((nil 10 nil 10) (nil nil 20 nil))}]
-    (let [processors (list (->Processor :test1 10 100)
+    (let [processors (list (assoc (->Processor :test1 10 100) :logic-state false)
                            (->Processor :test2 20 100)
                            (->Processor :test3 30 100)
                            (->Processor :test4 40 100))
