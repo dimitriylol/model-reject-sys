@@ -1,6 +1,7 @@
-(ns model-reject-sys.proc-test
-  (:require  [clojure.test :refer :all]
-             [model-reject-sys.elements.processors :refer :all]))
+(ns model-reject-sys.redistribute-test
+  (:require [clojure.test :refer :all]
+            [model-reject-sys.elements.redistribute :refer :all]
+            [model-reject-sys.elements.processors :refer [->Processor]]))
 
 (deftest redistributable-on?-test
   (let [test-proc (->Processor :test 40 100)]
@@ -19,12 +20,6 @@
     (testing
         (is (= (apply-redistributable-rule redistributable-rule processors) true))
       (is (= (apply-redistributable-rule fail-redistributable-rule processors) false)))))
-
-(deftest incr-load-test
-  (let [proc (->Processor :test 10 100)]
-    (testing
-        (is (= (incr-load proc nil) proc))
-      (is (= (incr-load proc 20) (->Processor :test 30 100))))))
 
 (deftest redistribute-test
   (with-redefs [processors-redistribution-table {:test1 '((nil 10 nil 10) (nil nil 20 nil))}]
