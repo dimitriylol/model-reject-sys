@@ -33,10 +33,18 @@
                                     unique-index)
              (n-permutations input-seq (dec n) (conj result-index-set unique-index)))))))
 
+
+(defn percentile [all percent]
+  (int (/ (* all percent) 100)))
+
+(defn percentile-elem [state-vector percent]
+  (percentile (combo/count-permutations state-vector) percent))
+
 (defn n-state-vectors
   "Generates n random, uniuque state vectors.
   If n isn't passed, all possible state vectors are returned"
   ([multiplicity size]
    (n-permutations (init-state-vector multiplicity size)))
   ([multiplicity size n]
-   (n-permutations (init-state-vector multiplicity size) n)))
+   (let [state-vector (init-state-vector multiplicity size)]
+     (n-permutations state-vector (percentile-elem state-vector n)))))

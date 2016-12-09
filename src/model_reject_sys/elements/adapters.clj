@@ -8,5 +8,5 @@
   (Adapter. nil (->Element {:rejection-prob (* 1.1 (expt 10 -4))
                             :name name})))
 
-(def adapters (map ->Adapter '(:b1 :b2 :b3)))
+(def adapters (map ->Adapter '(:a1 :a2)))
 
