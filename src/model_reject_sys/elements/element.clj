@@ -8,5 +8,6 @@
 (defn bool-to-int [bool] (if bool 1 0))
 
 (defn el-probability [{state :phys-state rej-prob :rejection-prob}]
-  (+ (* (bool-to-int state) (- 1 rej-prob))
-     (* (- 1 (bool-to-int state)) rej-prob)))
+  (if state
+    (- 1 rej-prob)
+    rej-prob))
